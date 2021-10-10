@@ -5,8 +5,8 @@ import {
   Flex,
   Grid,
   Icon,
-  Input,
   Image,
+  Input,
   Spacer,
   Text,
   useColorModeValue,
@@ -20,10 +20,10 @@ import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 import IconBox from "components/Icons/IconBox";
 import { Separator } from "components/Separator/Separator";
-import { FaWallet } from "react-icons/fa";
-import React, { useState } from "react";
-import Web3 from "web3";
 import simpleContractAbi from "contract/SimpleContract.json";
+import React, { useState } from "react";
+import { FaWallet } from "react-icons/fa";
+import Web3 from "web3";
 
 const useFormInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -38,39 +38,63 @@ const useFormInput = (initialValue) => {
 };
 
 function Wallet() {
-  const borderColor = useColorModeValue("#dee2e6", "gray.500");
-
   const [currentAccount, setCurrentAccount] = useState("");
   const [currentCount, setCount] = useState(0);
-
   const contractAddress = useFormInput("");
 
-  const connect = async () => {
-    if (typeof window.ethereum !== "undefined") {
-      const web3 = new Web3(Web3.givenProvider || "http://localhost:3000");
-      const accounts = await web3.eth.getAccounts();
+  const handleAccountsChanged = (accounts) => {
+    if (accounts.length === 0) {
+      console.log("Please connect to MetaMask.");
+    } else if (accounts[0] !== currentAccount) {
+      console.log("connected");
       setCurrentAccount(accounts[0]);
-      const network = await web3.eth.net.getNetworkType();
-      console.log(network);
-      const contract = new web3.eth.Contract(
-        simpleContractAbi,
-        contractAddress.value
-      );
-      contract.methods.balanceOf(accounts[0]).call(function (error, balance) {
-        console.log(balance);
-        contract.methods.decimals().call(function (error, decimals) {
-          balance = balance/(10**decimals);
-          setCount(balance);
-        });
-      });
     }
+    console.log("WalletAddress in HandleAccountChanged =" + currentAccount);
   };
 
-  const detectMetaMask = () => {
-    if (typeof window.ethereum !== "undefined") {
-      return true;
-    } else {
-      return false;
+  const handleConnect = async () => {
+    ethereum
+      .request({ method: "eth_requestAccounts" })
+      .then(handleAccountsChanged)
+      .catch((err) => {
+        if (err.code === 4001) {
+          // EIP-1193 userRejectedRequest error
+          // If this happens, the user rejected the connection request.
+          console.log("User rejected connection request");
+        } else {
+          console.error(err);
+        }
+      });
+  };
+
+  const handleRetrieve = async () => {
+    const web3 = new Web3(Web3.givenProvider || "http://localhost:3000");
+    const network = await web3.eth.net.getNetworkType();
+    console.log(network);
+    const contract = new web3.eth.Contract(
+      simpleContractAbi,
+      contractAddress.value
+    );
+    try {
+      contract.methods
+        .balanceOf(currentAccount)
+        .call(function (error, balance) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log(balance);
+            contract.methods.decimals().call(function (error, decimals) {
+              if (error) {
+                console.log(error);
+              } else {
+                balance = balance / 10 ** decimals;
+                setCount(balance);
+              }
+            });
+          }
+        });
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -102,7 +126,7 @@ function Wallet() {
                   color="white"
                   fontSize="xs"
                   variant="no-hover"
-                  onClick={connect}
+                  onClick={handleConnect}
                 >
                   Connect
                 </Button>
@@ -110,11 +134,10 @@ function Wallet() {
             </CardHeader>
             <CardBody>
               <Flex
-                direction={{ sm: "column", md: "row" }}
+                justify="space-between"
                 align="center"
+                minHeight="60px"
                 w="100%"
-                justify="center"
-                py="1rem"
               >
                 <Input
                   borderRadius="15px"
@@ -122,8 +145,18 @@ function Wallet() {
                   type="text"
                   placeholder="Contract Address"
                   size="lg"
+                  mr="20px"
                   {...contractAddress}
                 />
+                <Button
+                  bg={bgButton}
+                  color="white"
+                  fontSize="xs"
+                  variant="no-hover"
+                  onClick={handleRetrieve}
+                >
+                  Retrieve
+                </Button>
               </Flex>
             </CardBody>
           </Card>
@@ -158,12 +191,23 @@ function Wallet() {
                     <Text fontSize="md" fontWeight="bold">
                       EcoFinance
                     </Text>
-                    <Image src={metaicon} w="48px" h="auto" color="gray.400" />
+                    <IconBox me="10px" w="25px" h="25px">
+                      <Image
+                        src={metaicon}
+                        w="100%"
+                        h="100%"
+                        color="gray.400"
+                      />
+                    </IconBox>
                   </Flex>
                   <Spacer />
                   <Flex direction="column">
                     <Box>
-                      <Text fontSize="xl" letterSpacing="2px" fontWeight="bold">
+                      <Text
+                        color="gray.400"
+                        fontSize="md"
+                        fontWeight="semibold"
+                      >
                         {currentAccount}
                       </Text>
                     </Box>
