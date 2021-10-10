@@ -58,7 +58,10 @@ function Wallet() {
       );
       contract.methods.balanceOf(accounts[0]).call(function (error, balance) {
         console.log(balance);
-        setCount(balance);
+        contract.methods.decimals().call(function (error, decimals) {
+          balance = balance/(10**decimals);
+          setCount(balance);
+        });
       });
     }
   };
@@ -78,8 +81,6 @@ function Wallet() {
     "linear-gradient(81.62deg, #313860 2.25%, #151928 79.87%)",
     "gray.800"
   );
-
-  
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
