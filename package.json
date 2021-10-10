@@ -47,11 +47,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && gulp licenses",
+    "build": "react-scripts build",
     "test": "react-scripts test --passWithNoTests",
-    "eject": "react-scripts eject",
-    "deploy": "npm run build",
-    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start"
+    "eject": "react-scripts eject"
   },
   "optionalDependencies": {
     "@babel/core": "7.14.0",
