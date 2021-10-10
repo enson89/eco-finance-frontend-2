@@ -1,8 +1,8 @@
 {
-  "name": "purity-dashboard-react",
-  "version": "1.0.1",
+  "name": "eco-finance-frontend-2",
+  "version": "0.1.0",
   "private": true,
-  "homepage": "https://demos.creative-tim.com/purity-ui-dashboard/#/",
+  "homepage": "./",
   "dependencies": {
     "@chakra-ui/icons": "^1.0.14",
     "@chakra-ui/react": "^1.6.5",
@@ -10,17 +10,12 @@
     "@emotion/cache": "^11.4.0",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
-    "@ethersproject/providers": "^5.4.5",
     "@fontsource/open-sans": "^4.5.0",
     "@fontsource/raleway": "^4.5.0",
     "@fontsource/roboto": "^4.5.0",
-    "@usedapp/core": "^0.5.3",
-    "@web3-react/core": "^6.1.9",
-    "@web3-react/injected-connector": "^6.0.7",
     "apexcharts": "^3.27.3",
     "axios": "^0.19.0",
     "classnames": "2.3.1",
-    "ethers": "^5.4.7",
     "framer-motion": "^4.1.17",
     "match-sorter": "6.3.0",
     "moment": "2.29.1",
@@ -49,7 +44,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --passWithNoTests",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start"
   },
   "optionalDependencies": {
     "@babel/core": "7.14.0",
@@ -59,8 +55,6 @@
     "@babel/plugin-transform-react-jsx-source": "^7.14.5",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-prettier": "3.4.0",
-    "gulp": "4.0.2",
-    "gulp-append-prepend": "1.0.9",
     "prettier": "2.2.1"
   },
   "browserslist": {
@@ -69,6 +63,10 @@
       "not dead",
       "not op_mini all"
     ],
-    "development": []
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
