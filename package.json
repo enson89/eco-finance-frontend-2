@@ -41,7 +41,8 @@
     "web3": "^1.6.0"
   },
   "scripts": {
-    "start": "node --max_old_space_size=2560 node_modules/.bin/react-scripts start",
+    "start": "serve -s build",
+    "dev": "node --max_old_space_size=2560 node_modules/.bin/react-scripts start",
     "build": "node --max_old_space_size=2560 node_modules/.bin/react-scripts build",
     "test": "react-scripts test --passWithNoTests",
     "eject": "react-scripts eject"
